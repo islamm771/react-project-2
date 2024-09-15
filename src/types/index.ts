@@ -1,0 +1,1 @@
+export type NameTypes = "title" | "description" | "imageURL" | "price"

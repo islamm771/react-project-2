@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, ReactNode, useState } from "react";
+import { Fragment, ReactNode } from "react";
 
 interface IProps {
   isOpen: boolean;
@@ -33,7 +33,10 @@ const Modal =({isOpen , closeModal,children,title}:IProps) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/25" />
+            <div
+              className="fixed inset-0 backdrop-blur-sm bg-black/30"
+              aria-hidden="true"
+            />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -56,7 +59,12 @@ const Modal =({isOpen , closeModal,children,title}:IProps) => {
                       >
                         {title}
                       </Dialog.Title>
-                      <span className="text-4xl cursor-pointer text-red-600" onClick={closeModal} >&times;</span>
+                      <span
+                        className="text-4xl cursor-pointer text-red-600"
+                        onClick={closeModal}
+                      >
+                        &times;
+                      </span>
                     </div>
                   )}
 

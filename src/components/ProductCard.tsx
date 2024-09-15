@@ -1,41 +1,46 @@
-import { productList } from "../data";
 import { IProduct } from "../interfaces";
 import { TxtSlicer } from "../utilities/functions";
+import CircleColor from "./CircleColor";
 import ProductDetails from "./ProductDetails";
 import ProductImg from "./ProductImg";
 import Button from "./ui/Button";
 
 interface Iprops {
-  product:IProduct
-  openModal: () => void
-  setItem: (item:IProduct) => void
+  product: IProduct;
+  setProductToEdit: (product: IProduct) => void;
+  setEditOpen: () => void;
+  index: number;
+  setProductIndex: (val: number) => void;
+  setProductColor: (cols: string[]) => void;
+  openDelteModal : () => void
 }
 
-const ProductCard = ({product,openModal,setItem}:Iprops) =>{
+const ProductCard = ({product,setProductToEdit, setEditOpen,index , setProductIndex, openDelteModal,setProductColor}:Iprops) =>{
   const {title,imageURL,description,price,category, colors} = product
-  const renderColor = colors.map((color,index) => (
-    <span style={{backgroundColor : color}} className="w-5 h-5 cursor-pointer rounded-full" key={index}>
-    </span>
+  const renderColor = colors.map((color) => (
+    <CircleColor bgColor={color} key={color}/>
   ));
   const handleOpen = () =>{
-    openModal();
-    console.log(product.id);
-    const Item = productList.filter((item) => item.id == product.id )[0]
-    setItem(Item)
+    setProductToEdit(product)
+    setProductColor(product.colors)
+    setEditOpen();
+    setProductIndex(index)
+  }
+  const onDelete = () =>{
+    setProductToEdit(product)
+    openDelteModal()
   }
   return (
-    <div className="border rounded-lg p-3 flex flex-col">
-      <ProductImg src={imageURL} alt="Product Image" className="rounded-lg" />
+    <div className="max-w-sm md:max-w-lg border rounded-lg p-3 flex flex-col">
+      <ProductImg src={imageURL} alt="ProductImage" className="rounded-lg" />
 
       <div className="card-describtion mt-2">
         <ProductDetails title={title} />
-        <ProductDetails describtion={TxtSlicer(description, 80)} />
+        <ProductDetails describtion={TxtSlicer(description, 50)} />
       </div>
 
-      <div className="flex flex-wrap gap-2 my-4">
-        {renderColor}
-        {/* <span className="w-5 h-5 bg-red-500 cursor-pointer rounded-full" />
-        <span className="w-5 h-5 bg-yellow-500 cursor-pointer rounded-full" /> */}
+      <div className="flex flex-wrap gap-1 my-4">
+        {renderColor.length > 0 ? <>{renderColor}</> : <span>No available colors!!</span>}
       </div>
 
       <div className="flex items-center justify-between">
@@ -52,7 +57,7 @@ const ProductCard = ({product,openModal,setItem}:Iprops) =>{
 
       <div className="flex items-center justify-center space-x-2 mt-3">
         <Button className="bg-indigo-700" onClick={handleOpen}>Edit</Button>
-        <Button className="bg-red-700">Delete</Button>
+        <Button className="bg-red-700" onClick={onDelete}>Delete</Button>
       </div>
     </div>
   );
