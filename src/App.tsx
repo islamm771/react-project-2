@@ -58,6 +58,11 @@ function App() {
       ...productToEdit,
       [name]: value,
     });
+
+    setErrors({
+      ...errors,
+      [name]: "",
+    })
   };
 
   const handleColor = (color: string) => {
@@ -162,6 +167,23 @@ function App() {
   };
 
   const submitEditChange = () => {
+    const { title, imageURL, description, price } = productToEdit
+
+    const error = productsValidation({
+      title, description, imageURL, price
+    })
+
+    const hasErrorMsg =
+      Object.values(error).some(
+        (value) => value === ""
+      ) &&
+      Object.values(error).every((value) => value === "");
+
+    if (!hasErrorMsg) {
+      setErrors(error)
+      return;
+    }
+
     const updatedProducts = [...products];
     updatedProducts[ProductEditIdx] = {
       ...productToEdit,
